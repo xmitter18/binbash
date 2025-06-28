@@ -1,4 +1,9 @@
 /* INDEX */
+
+body {
+  margin: 0;
+}
+
 .arribaizquierda {
   display: flex;
   align-items: center;
@@ -23,17 +28,16 @@
 
 .pantalla-dividida {
   display: flex;
-  height: 129vh;
+  height: 100%;
 }
 
 .lado-izquierdo, .lado-derecho {
   flex: 1;
-  padding: 32px;
   overflow-y: auto;
 }
 
 .lado-izquierdo {
-  background: url('img/fondo2.jpg') center fixed;
+  background: url('img/fondo2.jpg') no-repeat center fixed;
   background-color: rgba(0, 0, 0, 0.85);
   color: rgb(17, 29, 39);
   display: flex;
@@ -44,11 +48,10 @@
 }
 
 .lado-derecho {
-  background: url('img/fondo.jpg') no-repeat center center fixed;
+  background: url('img/fondo.jpg') no-repeat center;
   background-size: cover;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
 }
 
 .quienes-somos {
@@ -153,10 +156,6 @@
   transition: transform 0.3s ease;
 }
 
-.testimonio:hover {
-  transform: translateY(-5px);
-}
-
 .texto-testimonio {
   font-style: italic;
   font-size: 16px;
@@ -196,12 +195,12 @@
 }
 
 footer {
-  width: 1667.2px;
+  width: 100%;
   background-color: #333;
   color: white;
   padding: 10px 0;
   position: absolute;
-  bottom: -270px;
+  bottom: -7%;
 }
 
 .realizadopor {
@@ -298,7 +297,7 @@ footer {
 }
 
 .landing {
-  width: 1667.2px;
+  width: 100%;
   background-color: #333;
   color: white;
   padding: 10px 0;
@@ -308,7 +307,7 @@ footer {
 
 /* INICIOSESION */
 .iniciosesion {
-  width: 1684px;
+  width: 100%;
   background-color: #333;
   color: white;
   padding: 10px 0;

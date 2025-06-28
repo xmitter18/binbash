@@ -1,69 +1,121 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <title>Registro</title>
-  <link rel="stylesheet" href="estilo.css">
-  <link rel="icon" href="favicon.ico">
+    <meta charset="utf-8"/>
+    <title>Landing Page</title>
+    <link rel="stylesheet" href="estilo.css"/>
+    <link rel="icon" href="favicon.ico"/>
 </head>
-<body class="landing-body">
-  <header class="top-bar">
-    <h1 class="h1index">Cooperativa TTT</h1>
-  </header>
+<body>
+  <main class="pantalla-dividida">
+    <section class="lado-izquierdo">
+      <div class="arribaizquierda">
+        <img src="img/Logocooperativa.png" width="100px" alt="Logo de la Cooperativa TTT">
+        <h1 id="h1index">Bienvenido a la Cooperativa TTT (Techo, Tierra y Trabajo)</h1>
+      </div>
+      <div class="quienes-somos">
+        <p id="pindex">
+          Somos una cooperativa de viviendas comprometida con el bienestar de nuestras familias asociadas, basada en los principios de solidaridad, autogestión y ayuda mutua. 
+          Nuestro objetivo es facilitar el acceso a una vivienda digna, accesible y de calidad mediante un modelo participativo, en el que cada integrante tiene voz y voto en las decisiones que nos construyen como comunidad.
+          Promovemos la organización colectiva como herramienta para alcanzar soluciones habitacionales sustentables, con enfoque social y respeto por el entorno. Desde la planificación y el diseño hasta la ejecución y la convivencia. 
+          Trabajamos en conjunto para desarrollar espacios inclusivos, seguros y humanos.
+          Nuestra cooperativa no persigue fines de lucro, sino que busca fortalecer el sentido de pertenencia, promover valores cooperativos y generar oportunidades reales de desarrollo para nuestras familias y el barrio que habitamos.
+        </p>
+        <p>
+          Nuestra cooperativa de viviendas de ayuda mutua se basa en la participación activa y solidaria de cada uno de sus miembros.
+          Todo comienza en nuestra página de inicio, donde cualquier persona interesada puede registrarse para formar parte.
+          Tras la validación del registro por parte de los administradores, el usuario debe cargar un comprobante de pago inicial que valida su aporte para integrarse formalmente a la cooperativa.
+          Una vez aceptado este comprobante, se le asigna una unidad habitacional y se habilita su acceso al sistema interno.
+          Allí, el socio podrá registrar semanalmente sus horas de trabajo en la construcción de su vivienda.
+          En caso de no alcanzar las 21 horas requeridas por semana, podrá justificarlo y subir un pago compensatorio.
+          Además, mes a mes, los miembros deben cargar su comprobante de pago mensual, el cual es verificado por los administradores.
+          A partir de esta información, el sistema indicará si el socio está al día o presenta atrasos.
+          Nuestro sistema asegura la transparencia, el compromiso colectivo y la organización eficiente de todos los aspectos administrativos y constructivos de la cooperativa.
+        </p>
+        <div class="botones-inferiores">
+          <a href="iniciosesion.html" class="btn-inicio">Iniciar sesión</a>
+          <a href="registro.html" class="btn-registro">Registrarse</a>
+        </div>
+      </div>
+    </section>
 
-  <div class="container">
-    <form class="registro-form" action="#" method="POST" novalidate>
-      <h2>Registro de Usuario</h2>
-
-      <div class="campo">
-        <label for="nombre">Nombre</label>
-        <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre" />
+    <section class="lado-derecho">
+      <div class="imagenes">
+        <img src="img/viviendas1.jpg" alt="Vivienda de la cooperativa 1">
+        <img src="img/viviendas2.jpg" alt="Vivienda de la cooperativa 2">
+        <img src="img/viviendas3.jpg" alt="Vivienda de la cooperativa 3">
+        <img src="img/viviendas4.jpg" alt="Vivienda de la cooperativa 4">
+        <img src="img/viviendas5.jpg" alt="Vivienda de la cooperativa 5">
       </div>
 
-      <div class="campo">
-        <label for="apellido">Apellido</label>
-        <input type="text" id="apellido" name="apellido" required placeholder="Tu apellido" />
+      <div class="nuestrosclientes">
+        <h2 class="titulo-testimonios">Lo que dicen nuestros socios</h2>
+        <div class="testimonios-container">
+          <div class="testimonio">
+            <p class="texto-testimonio">
+              <span class="comilla">❝</span>
+              Gracias a la TTT pude conseguir una vivienda agradable, espaciosa y bella. Extremadamente confiable y recomendado
+            </p>
+            <div class="datos-cliente">
+              <img src="img/Juan.jpg" alt="Juan Rodriguez" class="icono-cliente">
+              <div>
+                <p class="nombre-cliente">Juan Rodriguez</p>
+                <p class="rol-cliente">Farmacéutico</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonio">
+            <p class="texto-testimonio">
+              <span class="comilla">❝</span>
+              Gracias a TTT y sus servicios pude ser capaz de comprar mi camioneta Nissan frontier 2024 0km
+            </p>
+            <div class="datos-cliente">
+              <img src="img/gaspar.png" alt="Gaspar Morales" class="icono-cliente">
+              <div>
+                <p class="nombre-cliente">Gaspar Morales</p>
+                <p class="rol-cliente">Técnico audiovisual</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonio">
+            <p class="texto-testimonio">
+              <span class="comilla">❝</span>
+              Me encanta saber que mis ahorros están siendo usados para proyectos que benefician a la comunidad y al medio ambiente.
+            </p>
+            <div class="datos-cliente">
+              <img src="img/susana.jpg" alt="Susana Horia" class="icono-cliente">
+              <div>
+                <p class="nombre-cliente">Susana Horia</p>
+                <p class="rol-cliente">Doctora</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonio">
+            <p class="texto-testimonio">
+              <span class="comilla">❝</span>
+              Adoro saber que mis mascotas tienen un hogar nuevo y cómodo en donde vivir en paz
+            </p>
+            <div class="datos-cliente">
+              <img src="img/alberta.png" alt="Alberta Peña" class="icono-cliente">
+              <div>
+                <p class="nombre-cliente">Alberta Peña</p>
+                <p class="rol-cliente">Ingeniera en Sistemas</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div class="campo fecha-nacimiento">
-        <label for="fecha">Fecha de Nacimiento</label>
-        <input type="date" id="fecha" name="fecha" required />
+    </section>
+  </body>
+    <footer>
+      <div class="realizadopor">
+        <p>Trabajo realizado por Nicolas Graña, Benjamín Hiriart, Rachel Montesinos y Federico Ricca</p>
+        <img src="img/Logo de bin-bash sin fondo (light theme).png" width="8%" alt="Logo de bin-bash">
       </div>
+    </footer>
+  </main>
 
-      <div class="campo">
-        <label for="nombreusuario">Nombre de usuario</label>
-        <input type="text" id="nombreusuario" name="nombreusuario" required placeholder="Nombre de usuario" />
-      </div>
-
-      <div class="campo">
-        <label for="mail">Mail</label>
-        <input type="email" id="mail" name="mail" required placeholder="Mail" />
-      </div>
-
-      <div class="campo">
-        <label for="direccion">Dirección</label>
-        <input type="text" id="direccion" name="direccion" required placeholder="Dirección" />
-      </div>
-
-      <div class="campo">
-        <label for="contraseña">Contraseña</label>
-        <input type="password" id="contraseña" name="contraseña" required placeholder="Contraseña" />
-      </div>
-
-      <div class="campo">
-        <label for="confirmar">Confirmar contraseña</label>
-        <input type="password" id="confirmar" name="confirmar" required placeholder="Confirmar contraseña" />
-      </div>
-
-      <button type="submit" class="btn-submit">Registrarse</button>
-    </form>
-  </div>
-
-  <footer class="landing">
-    <div class="realizadopor">
-      <p>Trabajo realizado por Nicolas Graña, Benjamín Hiriart, Rachel Montesinos y Federico Ricca</p>
-      <img src="img/Logo de bin-bash sin fondo (light theme).png" width="80px" alt="Logo de bin-bash">
-    </div>
-  </footer>
-</body>
 </html>
