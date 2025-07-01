@@ -1,5 +1,6 @@
 CREATE DATABASE cooperativa;
 USE cooperativa;
+
 CREATE TABLE Persona (
     CI INT PRIMARY KEY CHECK (CI > 350000),
     Nombres VARCHAR(50),
@@ -8,11 +9,14 @@ CREATE TABLE Persona (
     Telefono VARCHAR(20),
     Correo VARCHAR(100)
 );
-
+SELECT * FROM Persona;
 CREATE TABLE Usuario (
     CI INT PRIMARY KEY,
+    NombreUsuario VARCHAR(50) UNIQUE NOT NULL,
+    Contraseña VARCHAR(255) NOT NULL,
     FOREIGN KEY (CI) REFERENCES Persona(CI)
 );
+SELECT * FROM Usuario;
 
 CREATE TABLE Admin (
     CI INT PRIMARY KEY,
@@ -30,14 +34,14 @@ CREATE TABLE Unidad_Habitacional (
 );
 
 CREATE TABLE Comprobante_Horas (
-    Fecha_Horas DATE PRIMARY KEY CHECK (Fecha_Horas <= CURRENT_DATE),
+    Fecha_Horas DATE PRIMARY KEY,
     Horas INT CHECK (Horas > 21),
     Estatus ENUM('Al dia', 'Atrasado')
 );
 
 CREATE TABLE Comprobante_Pago (
     CI INT,
-    Fecha_Pago DATE CHECK (Fecha_Pago <= CURRENT_DATE),
+    Fecha_Pago DATE,
     Forma_Pago ENUM('Tarjeta', 'Paypal'),
     PRIMARY KEY (CI, Fecha_Pago),
     FOREIGN KEY (CI) REFERENCES Persona(CI)

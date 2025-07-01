@@ -14,7 +14,7 @@
   </header>
 
   <div class="container">
-    <form class="registro-form" action="#" method="POST" novalidate>
+      <form class="registro-form" action="../backend/validar_login.php" method="POST" novalidate>
       <h2>Inicio de sesión</h2>
 
       <div class="campo">
@@ -38,5 +38,15 @@
     </div>
   </footer>
 </body>
+<script>
+    document.querySelector('.registro-form').addEventListener('submit', function(e) {
+      const usuario = document.getElementById('nombreusuario').value.trim();
+      const contraseña = document.getElementById('contraseña').value.trim();
 
+      if (!usuario || !contraseña) {
+        alert("Por favor, completa todos los campos.");
+        e.preventDefault();
+      }
+    });
+  </script>
 </html>

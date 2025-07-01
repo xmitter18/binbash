@@ -1,15 +1,27 @@
 version: '3.8'
 
 services:
-  mysql:
+  web:
+    build: .
+    container_name: apache-php
+    ports:
+      - "8080:80"
+    volumes:
+      - ../frontend:/var/www/html
+      - ../backend:/var/www/html/backend
+    depends_on:
+      - db
+
+  db:
     image: mysql:8
-    container_name: mysql-docker
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: cooperativa
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: prueba
+      MYSQL_USER: usuario
+      MYSQL_PASSWORD: pass
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 

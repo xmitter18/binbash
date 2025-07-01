@@ -12,7 +12,7 @@
   </header>
 
   <div class="container">
-    <form class="registro-form" action="#" method="POST" novalidate>
+  <form class="registro-form" action="../backend/registrar.php" method="POST" novalidate>
       <h2>Registro de Usuario</h2>
 
       <div class="campo">
@@ -23,6 +23,11 @@
       <div class="campo">
         <label for="apellido">Apellido</label>
         <input type="text" id="apellido" name="apellido" required placeholder="Tu apellido" />
+      </div>
+
+      <div class="campo">
+        <label for="ci">Cédula de Identidad</label>
+        <input type="number" id="ci" name="ci" required placeholder="Ej: 12345678" min="350001" />
       </div>
 
       <div class="campo fecha-nacimiento">
@@ -66,4 +71,29 @@
     </div>
   </footer>
 </body>
+<script>
+document.querySelector('.registro-form').addEventListener('submit', function(e) {
+    const nombre = document.getElementById('nombre').value.trim();
+    const apellido = document.getElementById('apellido').value.trim();
+    const ci = document.getElementById('ci').value.trim();
+    const fecha = document.getElementById('fecha').value.trim();
+    const nombreUsuario = document.getElementById('nombreusuario').value.trim();
+    const mail = document.getElementById('mail').value.trim();
+    const direccion = document.getElementById('direccion').value.trim();
+    const contraseña = document.getElementById('contraseña').value.trim();
+    const confirmar = document.getElementById('confirmar').value.trim();
+
+    if (!nombre || !apellido || !ci || !fecha || !nombreUsuario || !mail || !direccion || !contraseña || !confirmar) {
+        alert("Por favor, completa todos los campos.");
+        e.preventDefault();
+        return;
+    }
+
+    if (contraseña !== confirmar) {
+        alert("Las contraseñas no coinciden.");
+        e.preventDefault();
+        return;
+    }
+});
+</script>
 </html>
