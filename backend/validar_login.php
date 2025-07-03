@@ -6,15 +6,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $contraseña = $_POST["contraseña"];
 
     // Buscar el usuario por su nombre de usuario
-    $sql = "SELECT CI, Contraseña FROM Usuario WHERE NombreUsuario = ?";
+    $stmt = $conn->query("SELECT DATABASE()");
+    echo "Base de datos activa: " . $stmt->fetchColumn() . "<br>";
+    $sql = "SELECT CI, Contrasena FROM Usuario WHERE NombreUsuario = :nombreusuario";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $nombreusuario);
+    $stmt->bindParam(':nombreusuario', $nombreusuario);
     $stmt->execute();
-    $result = $stmt->get_result();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row = $result->fetch_assoc()) {
+    if ($row) {
         $ci = $row['CI'];
-        $contraseñaHash = $row['Contraseña'];
+        $contraseñaHash = $row['Contrasena'];
 
         // Verificar la contraseña
         if (password_verify($contraseña, $contraseñaHash)) {
@@ -27,4 +29,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         echo "Usuario no encontrado.";
     }
 }
+
+if (empty($nombreusuario) || empty($contraseña)) {
+    echo "Faltan datos.";
+    exit();
+}
+
 ?>

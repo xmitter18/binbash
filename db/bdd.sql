@@ -13,7 +13,7 @@ SELECT * FROM Persona;
 CREATE TABLE Usuario (
     CI INT PRIMARY KEY,
     NombreUsuario VARCHAR(50) UNIQUE NOT NULL,
-    Contraseña VARCHAR(255) NOT NULL,
+    Contrasena VARCHAR(255) NOT NULL,
     FOREIGN KEY (CI) REFERENCES Persona(CI)
 );
 SELECT * FROM Usuario;

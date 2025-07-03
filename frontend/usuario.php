@@ -1,5 +1,5 @@
 <?php
-require 'api/conexion.php';
+require('backend/conexion.php');
 
 $ci = $_GET['ci'] ?? null;
 
@@ -14,20 +14,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $domicilio = $_POST["domicilio"];
     $correo = $_POST["correo"];
 
-    $sqlUpdate = "UPDATE Persona SET Nombres=?, Apellidos=?, Domicilio=?, Correo=? WHERE CI=?";
+    $sqlUpdate = "UPDATE Persona SET Nombres = :nombres, Apellidos = :apellidos, Domicilio = :domicilio, Correo = :correo WHERE CI = :ci";
     $stmt = $conn->prepare($sqlUpdate);
-    $stmt->bind_param("ssssi", $nombres, $apellidos, $domicilio, $correo, $ci);
-    $stmt->execute();
-    echo "<p>Datos actualizados correctamente.</p>";
+    $stmt->bindParam(':nombres', $nombres);
+    $stmt->bindParam(':apellidos', $apellidos);
+    $stmt->bindParam(':domicilio', $domicilio);
+    $stmt->bindParam(':correo', $correo);
+    $stmt->bindParam(':ci', $ci, PDO::PARAM_INT);
+    
+    if ($stmt->execute()) {
+        echo "<p>Datos actualizados correctamente.</p>";
+    } else {
+        echo "<p>Error al actualizar los datos.</p>";
+    }
 }
 
 // Obtener datos del usuario
-$sql = "SELECT * FROM Persona WHERE CI = ?";
+$sql = "SELECT * FROM Persona WHERE CI = :ci";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $ci);
+$stmt->bindParam(':ci', $ci, PDO::PARAM_INT);
 $stmt->execute();
-$result = $stmt->get_result();
-$usuario = $result->fetch_assoc();
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
