@@ -1,27 +1,38 @@
 <?php
 require('backend/conexion.php');
 
+// Obtiene el valor de 'ci' que viene por la URL (Ejemplo: usuario.php?ci=12345678)
 $ci = $_GET['ci'] ?? null;
 
+// Si no se proporciona el 'ci', muestra un mensaje de error y detiene el script
 if (!$ci) {
     echo "CI no proporcionado";
     exit();
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    // Captura los datos que vienen desde el formulario HTML
     $nombres = $_POST["nombres"];
     $apellidos = $_POST["apellidos"];
     $domicilio = $_POST["domicilio"];
     $correo = $_POST["correo"];
 
-    $sqlUpdate = "UPDATE Persona SET Nombres = :nombres, Apellidos = :apellidos, Domicilio = :domicilio, Correo = :correo WHERE CI = :ci";
+    // Prepara la consulta SQL para actualizar los datos en la tabla Persona
+    $sqlUpdate = "UPDATE Persona 
+                  SET Nombres = :nombres, Apellidos = :apellidos, Domicilio = :domicilio, Correo = :correo 
+                  WHERE CI = :ci";
+
     $stmt = $conn->prepare($sqlUpdate);
+
+    // Asocia los valores del formulario a los parámetros de la consulta
     $stmt->bindParam(':nombres', $nombres);
     $stmt->bindParam(':apellidos', $apellidos);
     $stmt->bindParam(':domicilio', $domicilio);
     $stmt->bindParam(':correo', $correo);
     $stmt->bindParam(':ci', $ci, PDO::PARAM_INT);
-    
+
+    // Ejecuta la consulta y muestra un mensaje según el resultado
     if ($stmt->execute()) {
         echo "<p>Datos actualizados correctamente.</p>";
     } else {
@@ -29,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-// Obtener datos del usuario
+// Si no se envió el formulario o después de actualizar, obtiene los datos actuales del usuario
 $sql = "SELECT * FROM Persona WHERE CI = :ci";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':ci', $ci, PDO::PARAM_INT);
