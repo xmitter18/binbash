@@ -1,1 +1,1 @@
-link: https://xmitter18.github.io/binbash/frontend/
+LINK: https://xmitter18.github.io/binbash/frontend/
