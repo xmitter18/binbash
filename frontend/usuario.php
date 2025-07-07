@@ -49,6 +49,7 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -56,7 +57,8 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
   <link rel="stylesheet" href="estilo.css">
   <link rel="icon" href="favicon.ico">
 </head>
-<body>
+<body class="fondousuario">
+  <div class="logusuario">
   <h1>Bienvenido, <?php echo htmlspecialchars($usuario['Nombres']); ?></h1>
   <form method="POST">
     <label>Nombre: <input type="text" name="nombres" value="<?php echo $usuario['Nombres']; ?>" /></label><br>
@@ -65,5 +67,26 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
     <label>Correo: <input type="email" name="correo" value="<?php echo $usuario['Correo']; ?>" /></label><br>
     <button type="submit">Guardar cambios</button>
   </form>
+  </div>
+  <br>
+
+  <div class="comprobaqui">
+    <p>Inserte aquí sus comprobantes de pago.</p>
+  </div>
+
+  <div>
+    <button type="submit" class="btn-submit">Subir</button>
+  </div>
+<br>
+  <div>
+    <button type="submit" class="btn-submit">Ver propiedades disponibles</button>
+  </div>
+
+    <footer class="iniciosesion">
+    <div class="realizadopor">
+      <p>Trabajo realizado por Nicolas Graña, Benjamín Hiriart, Rachel Montesinos y Federico Ricca</p>
+      <img src="img/Logo de bin-bash sin fondo (light theme).png" width="80px" alt="Logo de bin-bash">
+    </div>
+  </footer>
 </body>
 </html>

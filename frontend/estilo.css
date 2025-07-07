@@ -314,3 +314,23 @@ footer {
   position: absolute;
   bottom: -15px;
 }
+
+/* PÁGINA DE USUARIOS */
+.fondousuario{
+  background: url('img/fondo2.jpg') no-repeat center fixed;
+}
+
+.logusuario{
+  padding: 0px 500px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.comprobaqui {
+  position: relative; 
+  margin: 40px auto;
+  width: 50%;
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
