@@ -48,6 +48,7 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -56,6 +57,7 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
   <link rel="icon" href="favicon.ico">
 </head>
 <body class="fondousuario">
+<<<<<<< HEAD
   <a href="landingpage.html" class="btn-logout">Cerrar sesión</a>
   <div class="logusuario">
     <h1>Bienvenido, <?= htmlspecialchars($usuario['Nombres']) ?></h1>
@@ -89,12 +91,25 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
     </form>
   </div>
 
+=======
+  <div class="logusuario">
+  <h1>Bienvenido, <?php echo htmlspecialchars($usuario['Nombres']); ?></h1>
+  <form method="POST">
+    <label>Nombre: <input type="text" name="nombres" value="<?php echo $usuario['Nombres']; ?>" /></label><br>
+    <label>Apellido: <input type="text" name="apellidos" value="<?php echo $usuario['Apellidos']; ?>" /></label><br>
+    <label>Domicilio: <input type="text" name="domicilio" value="<?php echo $usuario['Domicilio']; ?>" /></label><br>
+    <label>Correo: <input type="email" name="correo" value="<?php echo $usuario['Correo']; ?>" /></label><br>
+    <button type="submit">Guardar cambios</button>
+  </form>
+  </div>
+>>>>>>> 15b71a00c1f93d8c2ea4c953ad1de53215192d10
   <br>
 
   <div class="comprobaqui">
     <p>Inserte aquí sus comprobantes de pago.</p>
   </div>
 
+<<<<<<< HEAD
   <div style="max-width: 75%; margin: 0 auto;">
     <button type="button" class="btn-subir">Subir</button>
 
@@ -106,6 +121,17 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
   </div>
 
   <footer class="iniciosesion">
+=======
+  <div>
+    <button type="submit" class="btn-submit">Subir</button>
+  </div>
+<br>
+  <div>
+    <button type="submit" class="btn-submit">Ver propiedades disponibles</button>
+  </div>
+
+    <footer class="iniciosesion">
+>>>>>>> 15b71a00c1f93d8c2ea4c953ad1de53215192d10
     <div class="realizadopor">
       <p>Trabajo realizado por Nicolas Graña, Benjamín Hiriart, Rachel Montesinos y Federico Ricca</p>
       <img src="img/Logo de bin-bash sin fondo (light theme).png" width="80px" alt="Logo de bin-bash">
