@@ -201,11 +201,7 @@ footer {
   background-color: #333;
   color: white;
   padding: 10px 0;
-<<<<<<< HEAD
   position:absolute;
-=======
-  position:fixed;
->>>>>>> 15b71a00c1f93d8c2ea4c953ad1de53215192d10
   bottom: -7%;
 }
 
@@ -342,7 +338,6 @@ footer {
   padding: 20px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
-<<<<<<< HEAD
 
 .btn-subir,
 .btn-ver-propiedades {
@@ -394,5 +389,3 @@ footer {
 .btn-logout:hover {
   background-color: #f00739;
 }
-=======
->>>>>>> 15b71a00c1f93d8c2ea4c953ad1de53215192d10
