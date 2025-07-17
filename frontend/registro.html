@@ -46,6 +46,11 @@
       </div>
 
       <div class="campo">
+      <label for="telefono">Teléfono</label>
+      <input type="tel" id="telefono" name="telefono" required placeholder="Ej: 099123456" />
+      </div>
+
+      <div class="campo">
         <label for="direccion">Dirección</label>
         <input type="text" id="direccion" name="direccion" required placeholder="Dirección" />
       </div>
@@ -64,7 +69,7 @@
     </form>
   </div>
 
-  <footer class="landing">
+  <footer class="footerregistro">
     <div class="realizadopor">
       <p>Trabajo realizado por Nicolas Graña, Benjamín Hiriart, Rachel Montesinos y Federico Ricca</p>
       <img src="img/Logo de bin-bash sin fondo (light theme).png" width="80px" alt="Logo de bin-bash">
@@ -79,11 +84,13 @@ document.querySelector('.registro-form').addEventListener('submit', function(e) 
     const fecha = document.getElementById('fecha').value.trim();
     const nombreUsuario = document.getElementById('nombreusuario').value.trim();
     const mail = document.getElementById('mail').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
     const direccion = document.getElementById('direccion').value.trim();
     const contraseña = document.getElementById('contraseña').value.trim();
     const confirmar = document.getElementById('confirmar').value.trim();
+    
 
-    if (!nombre || !apellido || !ci || !fecha || !nombreUsuario || !mail || !direccion || !contraseña || !confirmar) {
+    if (!nombre || !apellido || !ci || !fecha || !nombreUsuario || !mail || !telefono ||  !direccion || !contraseña || !confirmar) {
         alert("Por favor, completa todos los campos.");
         e.preventDefault();
         return;

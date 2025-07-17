@@ -10,6 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $fecha = $_POST["fecha"]; 
     $usuario = $_POST["nombreusuario"];
     $mail = $_POST["mail"];
+    $telefono = $_POST["telefono"];
     $direccion = $_POST["direccion"];
     $contraseña = $_POST["contraseña"];
 
@@ -42,9 +43,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         // Inserta la persona en la tabla Persona
-        $sql1 = "INSERT INTO Persona (CI, Nombres, Apellidos, Domicilio, Correo) VALUES (?, ?, ?, ?, ?)";
+        $sql1 = "INSERT INTO Persona (CI, Nombres, Apellidos, Domicilio, Telefono, Correo) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt1 = $conn->prepare($sql1);
-        $stmt1->execute([$ci, $nombre, $apellido, $direccion, $mail]);
+        $stmt1->execute([$ci, $nombre, $apellido, $direccion, $telefono, $mail]);
+
 
         // Inserta el usuario en la tabla Usuario
         $sql2 = "INSERT INTO Usuario (CI, NombreUsuario, Contrasena) VALUES (?, ?, ?)";

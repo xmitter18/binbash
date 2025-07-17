@@ -1,38 +1,33 @@
 <?php
 require('backend/conexion.php');
 
-// Obtiene el valor de 'ci' que viene por la URL (Ejemplo: usuario.php?ci=12345678)
+// Obtener CI desde URL
 $ci = $_GET['ci'] ?? null;
-
-// Si no se proporciona el 'ci', muestra un mensaje de error y detiene el script
 if (!$ci) {
     echo "CI no proporcionado";
     exit();
 }
 
+// Actualizar datos si se envió el formulario
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-    // Captura los datos que vienen desde el formulario HTML
     $nombres = $_POST["nombres"];
     $apellidos = $_POST["apellidos"];
     $domicilio = $_POST["domicilio"];
+    $telefono = $_POST["telefono"];
     $correo = $_POST["correo"];
 
-    // Prepara la consulta SQL para actualizar los datos en la tabla Persona
     $sqlUpdate = "UPDATE Persona 
-                  SET Nombres = :nombres, Apellidos = :apellidos, Domicilio = :domicilio, Correo = :correo 
+                  SET Nombres = :nombres, Apellidos = :apellidos, Domicilio = :domicilio, Telefono = :telefono, Correo = :correo 
                   WHERE CI = :ci";
 
     $stmt = $conn->prepare($sqlUpdate);
-
-    // Asocia los valores del formulario a los parámetros de la consulta
     $stmt->bindParam(':nombres', $nombres);
     $stmt->bindParam(':apellidos', $apellidos);
     $stmt->bindParam(':domicilio', $domicilio);
+    $stmt->bindParam(':telefono', $telefono);
     $stmt->bindParam(':correo', $correo);
     $stmt->bindParam(':ci', $ci, PDO::PARAM_INT);
 
-    // Ejecuta la consulta y muestra un mensaje según el resultado
     if ($stmt->execute()) {
         echo "<p>Datos actualizados correctamente.</p>";
     } else {
@@ -40,8 +35,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-// Si no se envió el formulario o después de actualizar, obtiene los datos actuales del usuario
-$sql = "SELECT * FROM Persona WHERE CI = :ci";
+// Obtener datos
+$sql = "SELECT p.*, u.activo 
+        FROM Persona p
+        JOIN Usuario u ON p.CI = u.CI
+        WHERE p.CI = :ci";
+
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':ci', $ci, PDO::PARAM_INT);
 $stmt->execute();
@@ -53,17 +52,64 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 <head>
   <meta charset="UTF-8">
   <title>Perfil del Usuario</title>
-  <link rel="stylesheet" href="estilo.css">
+  <link rel="stylesheet" href="estilo.css?v=<?= time() ?>">
   <link rel="icon" href="favicon.ico">
 </head>
-<body>
-  <h1>Bienvenido, <?php echo htmlspecialchars($usuario['Nombres']); ?></h1>
-  <form method="POST">
-    <label>Nombre: <input type="text" name="nombres" value="<?php echo $usuario['Nombres']; ?>" /></label><br>
-    <label>Apellido: <input type="text" name="apellidos" value="<?php echo $usuario['Apellidos']; ?>" /></label><br>
-    <label>Domicilio: <input type="text" name="domicilio" value="<?php echo $usuario['Domicilio']; ?>" /></label><br>
-    <label>Correo: <input type="email" name="correo" value="<?php echo $usuario['Correo']; ?>" /></label><br>
-    <button type="submit">Guardar cambios</button>
-  </form>
+<body class="fondousuario">
+  <a href="landingpage.html" class="btn-logout">Cerrar sesión</a>
+  <div class="logusuario">
+    <h1>Bienvenido, <?= htmlspecialchars($usuario['Nombres']) ?></h1>
+    <form method="POST" class="registro-form">
+      <div class="campo">
+        <label for="nombres">Nombre</label>
+        <input type="text" name="nombres" id="nombres" value="<?= $usuario['Nombres'] ?>" required />
+      </div>
+
+      <div class="campo">
+        <label for="apellidos">Apellido</label>
+        <input type="text" name="apellidos" id="apellidos" value="<?= $usuario['Apellidos'] ?>" required />
+      </div>
+
+      <div class="campo">
+        <label for="domicilio">Domicilio</label>
+        <input type="text" name="domicilio" id="domicilio" value="<?= $usuario['Domicilio'] ?>" required />
+      </div>
+
+      <div class="campo">
+        <label for="telefono">Teléfono</label>
+        <input type="text" name="telefono" id="telefono" value="<?= $usuario['Telefono'] ?>" required />
+      </div>
+
+      <div class="campo">
+        <label for="correo">Correo</label>
+        <input type="email" name="correo" id="correo" value="<?= $usuario['Correo'] ?>" required />
+      </div>
+
+      <button type="submit" class="btn-submit">Guardar cambios</button>
+    </form>
+  </div>
+
+  <br>
+
+  <div class="comprobaqui">
+    <p>Inserte aquí sus comprobantes de pago.</p>
+  </div>
+
+  <div style="max-width: 75%; margin: 0 auto;">
+    <button type="button" class="btn-subir">Subir</button>
+
+    <?php if ($usuario['activo'] === 'aceptado'): ?>
+      <a href="propiedades.html"><button type="button" class="btn-ver-propiedades">Ver propiedades disponibles</button></a>
+    <?php else: ?>
+      <button type="button" class="btn-ver-propiedades" disabled style="background-color: grey; cursor: not-allowed;">Esperando aprobación</button>
+    <?php endif; ?>
+  </div>
+
+  <footer class="iniciosesion">
+    <div class="realizadopor">
+      <p>Trabajo realizado por Nicolas Graña, Benjamín Hiriart, Rachel Montesinos y Federico Ricca</p>
+      <img src="img/Logo de bin-bash sin fondo (light theme).png" width="80px" alt="Logo de bin-bash">
+    </div>
+  </footer>
 </body>
 </html>

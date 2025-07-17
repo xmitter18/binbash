@@ -14,6 +14,7 @@ CREATE TABLE Usuario (
     CI INT PRIMARY KEY,
     NombreUsuario VARCHAR(50) UNIQUE NOT NULL,
     Contrasena VARCHAR(255) NOT NULL,
+    activo TINYINT DEFAULT 0,
     FOREIGN KEY (CI) REFERENCES Persona(CI)
 );
 SELECT * FROM Usuario;

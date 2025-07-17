@@ -1,7 +1,7 @@
 FROM php:8.2-apache
 
-# Instalar el driver PDO para MySQL
-RUN docker-php-ext-install pdo pdo_mysql
+# Instalar extensiones necesarias: PDO, MySQLi
+RUN docker-php-ext-install pdo pdo_mysql mysqli
 
-# Habilitar Apache mod_rewrite (opcional)
+# Habilitar mod_rewrite de Apache (opcional)
 RUN a2enmod rewrite
