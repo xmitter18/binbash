@@ -8,8 +8,8 @@ if (!$ci) {
     exit();
 }
 
-// Actualizar datos si se envió el formulario
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+// Actualizar datos si se envió el formulario de perfil
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["nombres"])) {
     $nombres = $_POST["nombres"];
     $apellidos = $_POST["apellidos"];
     $domicilio = $_POST["domicilio"];
@@ -28,14 +28,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt->bindParam(':correo', $correo);
     $stmt->bindParam(':ci', $ci, PDO::PARAM_INT);
 
-    if ($stmt->execute()) {
-        echo "<p>Datos actualizados correctamente.</p>";
-    } else {
-        echo "<p>Error al actualizar los datos.</p>";
-    }
+    $stmt->execute();
 }
 
-// Obtener datos
+// Obtener datos del usuario
 $sql = "SELECT p.*, u.activo 
         FROM Persona p
         JOIN Usuario u ON p.CI = u.CI
@@ -45,9 +41,36 @@ $stmt = $conn->prepare($sql);
 $stmt->bindParam(':ci', $ci, PDO::PARAM_INT);
 $stmt->execute();
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Manejo de comprobantes
+$comprobantesDir = "comprobantes/$ci/";
+if (!is_dir($comprobantesDir)) {
+    mkdir($comprobantesDir, 0777, true);
+}
+$archivosActuales = glob($comprobantesDir . "*.pdf");
+
+// Subida de comprobantes
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES['comprobantes'])) {
+    $archivos = $_FILES['comprobantes'];
+    $cantidadActual = count($archivosActuales);
+
+    for ($i = 0; $i < count($archivos['name']); $i++) {
+        if ($archivos['error'][$i] === UPLOAD_ERR_OK && $cantidadActual < 2) {
+            $ext = strtolower(pathinfo($archivos['name'][$i], PATHINFO_EXTENSION));
+            if ($ext === 'pdf') {
+                $nuevoNombre = uniqid("comp_", true) . ".pdf";
+                $rutaDestino = $comprobantesDir . $nuevoNombre;
+                move_uploaded_file($archivos['tmp_name'][$i], $rutaDestino);
+                $cantidadActual++;
+            }
+        }
+    }
+
+    // Refrescar lista de archivos
+    $archivosActuales = glob($comprobantesDir . "*.pdf");
+}
 ?>
 
-<!DOCTYPE html>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -58,34 +81,15 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 </head>
 <body class="fondousuario">
   <a href="landingpage.html" class="btn-logout">Cerrar sesión</a>
+
   <div class="logusuario">
     <h1>Bienvenido, <?= htmlspecialchars($usuario['Nombres']) ?></h1>
     <form method="POST" class="registro-form">
-      <div class="campo">
-        <label for="nombres">Nombre</label>
-        <input type="text" name="nombres" id="nombres" value="<?= $usuario['Nombres'] ?>" required />
-      </div>
-
-      <div class="campo">
-        <label for="apellidos">Apellido</label>
-        <input type="text" name="apellidos" id="apellidos" value="<?= $usuario['Apellidos'] ?>" required />
-      </div>
-
-      <div class="campo">
-        <label for="domicilio">Domicilio</label>
-        <input type="text" name="domicilio" id="domicilio" value="<?= $usuario['Domicilio'] ?>" required />
-      </div>
-
-      <div class="campo">
-        <label for="telefono">Teléfono</label>
-        <input type="text" name="telefono" id="telefono" value="<?= $usuario['Telefono'] ?>" required />
-      </div>
-
-      <div class="campo">
-        <label for="correo">Correo</label>
-        <input type="email" name="correo" id="correo" value="<?= $usuario['Correo'] ?>" required />
-      </div>
-
+      <div class="campo"><label for="nombres">Nombre</label><input type="text" name="nombres" id="nombres" value="<?= $usuario['Nombres'] ?>" required /></div>
+      <div class="campo"><label for="apellidos">Apellido</label><input type="text" name="apellidos" id="apellidos" value="<?= $usuario['Apellidos'] ?>" required /></div>
+      <div class="campo"><label for="domicilio">Domicilio</label><input type="text" name="domicilio" id="domicilio" value="<?= $usuario['Domicilio'] ?>" required /></div>
+      <div class="campo"><label for="telefono">Teléfono</label><input type="text" name="telefono" id="telefono" value="<?= $usuario['Telefono'] ?>" required /></div>
+      <div class="campo"><label for="correo">Correo</label><input type="email" name="correo" id="correo" value="<?= $usuario['Correo'] ?>" required /></div>
       <button type="submit" class="btn-submit">Guardar cambios</button>
     </form>
   </div>
@@ -93,12 +97,28 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
   <br>
 
   <div class="comprobaqui">
-    <p>Inserte aquí sus comprobantes de pago.</p>
+    <?php if (count($archivosActuales) > 0): ?>
+      <p>Comprobantes subidos:</p>
+      <ul>
+        <?php foreach ($archivosActuales as $archivo): ?>
+          <li><?= basename($archivo) ?></li>
+        <?php endforeach; ?>
+      </ul>
+    <?php else: ?>
+      <p>Inserte aquí sus comprobantes de pago.</p>
+    <?php endif; ?>
   </div>
 
-  <div style="max-width: 75%; margin: 0 auto;">
-    <button type="button" class="btn-subir">Subir</button>
+  <?php if (count($archivosActuales) < 2): ?>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px;">
+  <form method="POST" enctype="multipart/form-data" style="display: flex; align-items: center; gap: 10px;">
+    <input type="file" name="comprobantes[]" accept="application/pdf" multiple required>
+    <button type="submit" class="btn-subir">Subir</button>
+  </form>
+</div>
+  <?php endif; ?>
 
+  <div style="max-width: 75%; margin: 0 auto;">
     <?php if ($usuario['activo'] === 'aceptado'): ?>
       <a href="propiedades.html"><button type="button" class="btn-ver-propiedades">Ver propiedades disponibles</button></a>
     <?php else: ?>
