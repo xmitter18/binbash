@@ -24,11 +24,19 @@ $resultado = $conexion->query($sql);
 <head>
     <meta charset="UTF-8">
     <title>Panel Admin</title>
+    <link rel="stylesheet" href="/estilo.css" />
+    <link rel="icon" href="/favicon.ico">
 </head>
-<body>
-<h1>Panel de Administración</h1>
+<body class="lado-izquierdo">
+<header class="top-bar">
+    <h1>Panel de Administración</h1>
+</header>
+<br>
 <h2>Usuarios Registrados</h2>
-
+<div class="filtro-busqueda">
+    <label for="buscar-ci"><strong>Buscar por CI:</strong></label>
+    <input type="text" id="buscar-ci" placeholder="Escribe una cédula...">
+</div>
 <?php if ($resultado && $resultado->num_rows > 0): ?>
     <ul>
     <?php while ($fila = $resultado->fetch_assoc()): ?>
@@ -65,8 +73,6 @@ if ($comprobantes && count($comprobantes) > 0) {
 
 ?>
 </ul>
-
-
             <hr>
         </li>
     <?php endwhile; ?>
@@ -74,8 +80,23 @@ if ($comprobantes && count($comprobantes) > 0) {
 <?php else: ?>
     <p>No hay usuarios registrados o hubo un error en la consulta.</p>
 <?php endif; ?>
+<script>
+    document.getElementById('buscar-ci').addEventListener('input', function () {
+        const filtro = this.value.trim().toLowerCase();
+        const usuarios = document.querySelectorAll('ul > li');
+
+        usuarios.forEach(usuario => {
+            const ci = usuario.querySelector('p strong + text')?.textContent?.toLowerCase() || '';
+            const textoCI = usuario.querySelector('p')?.textContent?.toLowerCase() || '';
+            if (textoCI.includes(filtro)) {
+                usuario.style.display = '';
+            } else {
+                usuario.style.display = 'none';
+            }
+        });
+    });
+</script>
 </body>
 </html>
 
 <?php $conexion->close(); ?>
-

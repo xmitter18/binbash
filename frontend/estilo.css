@@ -389,3 +389,20 @@ footer {
 .btn-logout:hover {
   background-color: #f00739;
 }
+
+/*BACKOFICE*/
+
+.filtro-busqueda {
+    margin: 10px 0 20px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#buscar-ci {
+    padding: 5px 10px;
+    width: 200px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
