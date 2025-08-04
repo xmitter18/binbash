@@ -76,12 +76,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES['comprobantes'])) {
 <head>
   <meta charset="UTF-8">
   <title>Perfil del Usuario</title>
-  <link rel="stylesheet" href="estilo.css?v=<?= time() ?>">
+  <link rel="stylesheet" href="estilo.css?v=?= time() ?>">
   <link rel="icon" href="favicon.ico">
 </head>
 <body class="fondousuario">
   <a href="landingpage.html" class="btn-logout">Cerrar sesión</a>
-
   <div class="logusuario">
     <h1>Bienvenido, <?= htmlspecialchars($usuario['Nombres']) ?></h1>
     <form method="POST" class="registro-form">
@@ -105,7 +104,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES['comprobantes'])) {
         <?php endforeach; ?>
       </ul>
     <?php else: ?>
-      <p>Inserte aquí sus comprobantes de pago.</p>
+      <br>
+      <p> Inserte aquí sus comprobantes de pago.</p>
+      <br>
     <?php endif; ?>
   </div>
 
@@ -118,19 +119,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES['comprobantes'])) {
 </div>
   <?php endif; ?>
 
-  <div style="max-width: 75%; margin: 0 auto;">
-    <?php if ($usuario['activo'] === 'aceptado'): ?>
-      <a href="propiedades.html"><button type="button" class="btn-ver-propiedades">Ver propiedades disponibles</button></a>
-    <?php else: ?>
-      <button type="button" class="btn-ver-propiedades" disabled style="background-color: grey; cursor: not-allowed;">Esperando aprobación</button>
-    <?php endif; ?>
-  </div>
+  <div class="contenedor-boton">
+  <?php if ($usuario['activo'] === 'aceptado'): ?>
+    <a href="propiedades.html" class="btn-ver-propiedades">Ver propiedades disponibles</a>
+  <?php else: ?>
+    <button type="button" class="btn-ver-propiedades" disabled style="background-color: grey; cursor: not-allowed;">Esperando aprobación</button>
+  <?php endif; ?>
+</div>
 
-  <footer class="iniciosesion">
-    <div class="realizadopor">
-      <p>Trabajo realizado por Nicolas Graña, Benjamín Hiriart, Rachel Montesinos y Federico Ricca</p>
-      <img src="img/Logo de bin-bash sin fondo (light theme).png" width="80px" alt="Logo de bin-bash">
-    </div>
-  </footer>
+
 </body>
 </html>

@@ -2,6 +2,8 @@
 
 body {
   margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #e6e6e6;
 }
 
 #h1index {
@@ -12,82 +14,85 @@ body {
 
 /* LANDINGPAGE */
 
-.arribaizquierda {
+
+.encabezado {
   display: flex;
   align-items: center;
   gap: 20px;
-  margin-bottom: 45px;
-}
-
-.arribaizquierda img {
-  width: 100px;
-  height: auto;
-}
-
-#pindex {
-  margin: 0;
-}
-
-.pantalla-dividida {
-  display: flex;
-  height: 100%;
-}
-
-.lado-izquierdo, .lado-derecho {
-  flex: 1;
-  overflow-y: auto;
-}
-
-.lado-izquierdo {
-  background: url('img/fondo2.jpg') no-repeat center fixed;
-  background-color: rgba(0, 0, 0, 0.85);
-  color: rgb(17, 29, 39);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
-
-.lado-derecho {
-  background: url('img/fondo.jpg') no-repeat center;
-  background-size: cover;
-  display: flex;
-  justify-content: center;
-}
-
-.quienes-somos {
-  background-color: rgba(0, 0, 0, 0.85);
-  color: #f0f0f0;
-  margin: 32px;
-  max-width: 700px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-  border-radius: 10px;
-  text-align: justify;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
-  position: relative;
-  padding: 32px 32px 32px 32px;
-  bottom: 50px;
-}
-
-.botones-inferiores {
-  margin-top: 67px; 
-  display: flex;
-  gap: 24px;
-}
-
-.btn-inicio {
   background-color: #ffffff;
-  color: #000000;
-  border: none;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.botones-header {
+  margin-left: auto;  /* Empuja los botones al extremo derecho */
+  display: flex;
+  gap: 15px; /* Espacio entre botones */
+}
+
+.btn-inicio, .btn-registro {
   padding: 12px 32px;
   font-size: 16px;
   font-weight: bold;
   border-radius: 8px;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+  text-decoration: none;
   transition: background-color 0.3s ease;
+}
+
+.encabezado img {
+  width: 100px;
+  height: auto;
+}
+
+.encabezado h1 {
+  font-size: 24px;
+  margin: 0;
+  color: #333;
+}
+
+.contenido {
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 60px;
+  background: url('img/fondo2.jpg') no-repeat center;
+  background-size: cover;
+}
+
+.quienes-somos {
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #f0f0f0;
+  padding: 32px;
+  border-radius: 10px;
+  max-width: 800px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+  text-align: justify;
+  line-height: 1.6;
+}
+
+.botones-inferiores {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.btn-inicio, .btn-registro {
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-inicio {
+  background-color: #dddbdb;
+  color: #000;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
 }
 
 .btn-inicio:hover {
@@ -95,54 +100,49 @@ body {
 }
 
 .btn-registro {
-  background-color: #5c6bc0; 
-  color: #ffffff;
-  border: none;
-  padding: 12px 32px;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
+  background-color: #5c6bc0;
+  color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  transition: background-color 0.3s ease;
 }
 
 .btn-registro:hover {
   background-color: #3f51b5;
 }
 
-.imagenes {
-  background-color: rgba(0, 0, 0, 0.85);
-  padding: 16px;
-  margin: 16px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+.galeria .imagenes {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 16px;
-  max-width: 400px;
+  justify-content: center;
+  max-width: 1000px;
 }
 
 .imagenes img {
-  width: 100%;
+  width: 180px;
+  height: auto;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 6px;
+  background-color: black;
+  margin: 6px;
+}
+
+.testimonios {
+  max-width: 1200px;
+  text-align: center;
 }
 
 .titulo-testimonios {
-  text-align: center;
-  font-size: 24px;
-  color: white;
+  font-size: 28px;
+  color: #333;
   margin-bottom: 20px;
-  margin-top: 40px;
 }
 
 .testimonios-container {
   display: flex;
-  justify-content: center;
-  gap: 20px;
   flex-wrap: wrap;
-  padding: 0 20px 40px;
+  gap: 20px;
+  justify-content: center;
 }
 
 .testimonio {
@@ -150,12 +150,7 @@ body {
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 24px;
-  width: 400px;
-  max-width: 90%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.3s ease;
+  width: 300px;
 }
 
 .texto-testimonio {
@@ -163,8 +158,6 @@ body {
   font-size: 16px;
   color: #333;
   margin-bottom: 20px;
-  position: relative;
-  line-height: 1.5;
 }
 
 .comilla {
@@ -182,6 +175,7 @@ body {
 .icono-cliente {
   width: 32px;
   height: 32px;
+  border-radius: 50%;
 }
 
 .nombre-cliente {
@@ -197,12 +191,9 @@ body {
 }
 
 footer {
-  width: 100%;
   background-color: #333;
   color: white;
-  padding: 10px 0;
-  position:absolute;
-  bottom: -7%;
+  padding: 15px 20px;
 }
 
 .realizadopor {
@@ -211,12 +202,10 @@ footer {
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
 }
 
-.realizadopor p {
-  font-size: 16px;
-  margin: 0;
+.realizadopor img {
+  width: 60px;
 }
 
 
@@ -244,9 +233,8 @@ footer {
   background-size: cover;
   display: flex;
   justify-content: center;
-  align-items: flex-start; 
+  align-items: center; 
   min-height: 100vh;
-  padding-top: 60px; 
 }
 
 .container {
@@ -256,6 +244,8 @@ footer {
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   width: 100%;
   max-width: 400px;
+  margin-bottom: 10px;
+  margin-top: 60px;
 }
 
 .registro-form h2 {
@@ -304,45 +294,61 @@ footer {
   width: 100%;
   background-color: #333;
   color: white;
-  padding: 10px 0;
-  position: absolute;
-  bottom: auto;      
-  margin-top: 56%;    
-}
-
-.iniciosesion {
-  width: 100%;
-  background-color: #333;
-  color: white;
-  padding: 10px 0;
-  position: absolute;
-  bottom: -15px;
+    
 }
 
 /* PÁGINA DE USUARIOS */
 .fondousuario{
   background: url('img/fondo2.jpg') no-repeat center fixed;
+  background-size: cover;
+  justify-content: center;
+  align-items: center; 
+  min-height: 100vh;
 }
 
 .logusuario{
-  padding: 0px 500px;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  position: relative;
+  width: 50%;
+  left: 25%;
 }
 
 .comprobaqui {
   position: relative; 
-  margin: 40px auto;
   width: 50%;
+  left: 25%;
   background-color: #333;
   color: white;
-  padding: 20px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  text-align: center;
 }
 
-.btn-subir,
+.contenedor-boton {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
 .btn-ver-propiedades {
-  width: 100%;
-  max-width: 850px;
+  width: 50%;              
+  max-width: 50%;           
+  min-width: 50%;          
+  background-color: #000000;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 700;
+  text-align: center;
+}
+
+
+.btn-subir{
+  width: 50%;
+  left: 25%;
+  position: relative;
   display: block;
   margin: 10px auto;
   font-size: 16px;
@@ -376,7 +382,10 @@ footer {
 }
 
 .btn-logout {
-  background-color: #e74c3c;
+  background-color: #ff002b;
+  position: absolute;
+  top: 5px;
+  right: 5px;
   color: white;
   padding: 10px 20px;
   border-radius: 6px;
@@ -386,9 +395,6 @@ footer {
   transition: background-color 0.3s ease;
 }
 
-.btn-logout:hover {
-  background-color: #f00739;
-}
 
 /*BACKOFICE*/
 
@@ -405,4 +411,75 @@ footer {
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+h2 {
+  margin-top: 50px;
+  color: black;
+}
+
+table {
+  width: 95%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  background-color: white;
+  font-size: 14px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #d6d6d6;
+  font-weight: bold;
+}
+
+ul {
+  padding-left: 15px;
+  margin: 0;
+  list-style: none;
+}
+
+ul li {
+  font-size: 13px;
+  margin-bottom: 3px;
+}
+
+.btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn.aceptar {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.btn.rechazar {
+  background-color: #e53935;
+  color: white;
+}
+
+.sin-usuarios {
+  color: white;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.lado-izquierdo {
+  background: url('img/fondo2.jpg') no-repeat center;
+  background-size: cover;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: rgb(17, 29, 39);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
