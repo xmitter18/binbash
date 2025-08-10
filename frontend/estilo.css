@@ -329,7 +329,7 @@ footer {
   margin-top: 20px;
 }
 
-.btn-ver-propiedades {
+.btn-ver-propiedades{
   width: 50%;              
   max-width: 50%;           
   min-width: 50%;          
@@ -393,6 +393,32 @@ footer {
   text-decoration: none;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s ease;
+}
+
+.links-ejemplos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px; 
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.btn-link {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #4a90e2;
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-link:hover {
+  background-color: #357ABD;
 }
 
 

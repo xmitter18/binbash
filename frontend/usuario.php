@@ -76,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES['comprobantes'])) {
 <head>
   <meta charset="UTF-8">
   <title>Perfil del Usuario</title>
-  <link rel="stylesheet" href="estilo.css?v=?= time() ?>">
+  <link rel="stylesheet" href="estilo.css?v=<?= time() ?>">
   <link rel="icon" href="favicon.ico">
 </head>
 <body class="fondousuario">
@@ -90,6 +90,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES['comprobantes'])) {
       <div class="campo"><label for="telefono">Teléfono</label><input type="text" name="telefono" id="telefono" value="<?= $usuario['Telefono'] ?>" required /></div>
       <div class="campo"><label for="correo">Correo</label><input type="email" name="correo" id="correo" value="<?= $usuario['Correo'] ?>" required /></div>
       <button type="submit" class="btn-submit">Guardar cambios</button>
+      <br>
+      <br>
+     <div class="links-ejemplos">
+  <a href="comprobantes/COMPROBANTE%20DE%20PAGO.pdf" target="_blank" class="btn-link">
+      Ejemplo de comprobante de pago
+  </a>
+  <a href="comprobantes/COMPROBANTE%20DE%20HORAS.pdf" target="_blank" class="btn-link">
+      Ejemplo de comprobante de horas
+  </a>
+</div>
+
     </form>
   </div>
 
