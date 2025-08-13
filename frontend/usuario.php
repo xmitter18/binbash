@@ -132,7 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES['comprobantes'])) {
 
   <div class="contenedor-boton">
   <?php if ($usuario['activo'] === 'aceptado'): ?>
-    <a href="propiedades.html" class="btn-ver-propiedades">Ver propiedades disponibles</a>
+    <a href="casas.html" class="btn-ver-propiedades">Ver propiedades disponibles</a>
   <?php else: ?>
     <button type="button" class="btn-ver-propiedades" disabled style="background-color: grey; cursor: not-allowed;">Esperando aprobación</button>
   <?php endif; ?>
