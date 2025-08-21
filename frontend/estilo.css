@@ -604,3 +604,21 @@ ul li {
     font-size: 24px;
   }
 }
+
+.btn-atras {
+  background-color: #4a90e2;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.btn-atras:hover {
+  background-color: #357ABD;
+}

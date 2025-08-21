@@ -8,6 +8,7 @@ if (!$ci) {
     exit();
 }
 
+
 // Actualizar datos si se envió el formulario de perfil
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["nombres"])) {
     $nombres = $_POST["nombres"];
@@ -50,18 +51,25 @@ if (!is_dir($comprobantesDir)) {
 $archivosActuales = glob($comprobantesDir . "*.pdf");
 
 // Subida de comprobantes
+// Subida de comprobantes (máximo 2 siempre)
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES['comprobantes'])) {
     $archivos = $_FILES['comprobantes'];
-    $cantidadActual = count($archivosActuales);
 
+    // Borrar comprobantes anteriores para permitir reemplazo
+    foreach (glob($comprobantesDir . "*.pdf") as $archivoAntiguo) {
+        unlink($archivoAntiguo);
+    }
+
+    // Subir hasta 2 comprobantes nuevos
+    $subidos = 0;
     for ($i = 0; $i < count($archivos['name']); $i++) {
-        if ($archivos['error'][$i] === UPLOAD_ERR_OK && $cantidadActual < 2) {
+        if ($archivos['error'][$i] === UPLOAD_ERR_OK && $subidos < 2) {
             $ext = strtolower(pathinfo($archivos['name'][$i], PATHINFO_EXTENSION));
             if ($ext === 'pdf') {
                 $nuevoNombre = uniqid("comp_", true) . ".pdf";
                 $rutaDestino = $comprobantesDir . $nuevoNombre;
                 move_uploaded_file($archivos['tmp_name'][$i], $rutaDestino);
-                $cantidadActual++;
+                $subidos++;
             }
         }
     }
@@ -69,6 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES['comprobantes'])) {
     // Refrescar lista de archivos
     $archivosActuales = glob($comprobantesDir . "*.pdf");
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -121,18 +130,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES['comprobantes'])) {
     <?php endif; ?>
   </div>
 
-  <?php if (count($archivosActuales) < 2): ?>
-    <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px;">
+  <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px;">
   <form method="POST" enctype="multipart/form-data" style="display: flex; align-items: center; gap: 10px;">
     <input type="file" name="comprobantes[]" accept="application/pdf" multiple required>
-    <button type="submit" class="btn-subir">Subir</button>
+    <button type="submit" class="btn-subir">Subir/Reemplazar</button>
   </form>
 </div>
-  <?php endif; ?>
 
   <div class="contenedor-boton">
   <?php if ($usuario['activo'] === 'aceptado'): ?>
-    <a href="casas.html" class="btn-ver-propiedades">Ver propiedades disponibles</a>
+  <a href="casas.php?ci=<?= urlencode($ci) ?>" class="btn-ver-propiedades">Ver propiedades disponibles</a>
   <?php else: ?>
     <button type="button" class="btn-ver-propiedades" disabled style="background-color: grey; cursor: not-allowed;">Esperando aprobación</button>
   <?php endif; ?>

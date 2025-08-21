@@ -81,3 +81,10 @@ CREATE TABLE Gestiona (
     FOREIGN KEY (CI_Admin) REFERENCES Admin(CI),
     FOREIGN KEY (ID_Unidad) REFERENCES Unidad_Habitacional(ID)
 );
+
+CREATE TABLE casas (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(255),
+    precio DECIMAL(10,2),
+    imagen VARCHAR(255)
+);

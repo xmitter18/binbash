@@ -62,12 +62,31 @@ $resultado = $conexion->query($sql);
                 <td><?= $fila["Correo"] ?></td>
                 <td><?= $fila["Telefono"] ?></td>
                 <td><?= $fila["Domicilio"] ?></td>
-                <td><?= $fila["activo"] ?></td>
+                <td>
+                    <?php
+                    $ci = $fila['CI'];
+                    $basePath = __DIR__ . "/../comprobantes/$ci/";
+                    if (!is_dir($basePath)) {
+                        mkdir($basePath, 0777, true);
+                    }
+
+                    $comprobantes = glob($basePath . "*.[Pp][Dd][Ff]");
+                    $emojiActualizado = '';
+
+                    // Verificamos si hay archivos modificados en las últimas 24 horas
+                    foreach ($comprobantes as $archivo) {
+                        if (filemtime($archivo) >= time() - 24 * 60 * 60) {
+                            $emojiActualizado = '🟡';
+                            break;
+                        }
+                    }
+
+                    echo $fila["activo"] . " " . $emojiActualizado;
+                    ?>
+                </td>
                 <td>
                     <ul>
                         <?php
-                        $ci = $fila['CI'];
-                        $comprobantes = glob(__DIR__ . "/../comprobantes/$ci/*.[Pp][Dd][Ff]");
                         if ($comprobantes && count($comprobantes) > 0) {
                             foreach ($comprobantes as $comp) {
                                 $nombreArchivo = basename($comp);
@@ -99,7 +118,6 @@ $resultado = $conexion->query($sql);
     document.getElementById('buscar-ci').addEventListener('input', function () {
         const filtro = this.value.trim().toLowerCase();
         const filas = document.querySelectorAll("#tablaUsuarios tbody tr");
-
         filas.forEach(fila => {
             const ci = fila.querySelector("td").textContent.toLowerCase();
             fila.style.display = ci.includes(filtro) ? '' : 'none';
