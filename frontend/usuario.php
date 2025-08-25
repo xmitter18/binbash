@@ -32,10 +32,73 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["nombres"])) {
     $stmt->execute();
 }
 
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['guardar_horas'])) {
+    $horas = (int)$_POST['horas_semanales'];
+
+    // Obtener el id de la casa donde trabaja actualmente
+    $stmtCasa = $conn->prepare("SELECT casa_id FROM Trabajo WHERE CI = :ci");
+    $stmtCasa->bindParam(':ci', $ci, PDO::PARAM_INT);
+    $stmtCasa->execute();
+    $casa = $stmtCasa->fetch(PDO::FETCH_ASSOC);
+
+    if ($casa) {
+        $casa_id = $casa['casa_id'];
+
+        // Fecha del lunes de esta semana
+        $lunesSemana = date('Y-m-d', strtotime('monday this week'));
+
+        // Verificar si ya tiene registro de esta semana
+        $stmtCheck = $conn->prepare("SELECT horas FROM HorasTrabajo WHERE CI = :ci AND casa_id = :casa_id AND semana = :semana");
+        $stmtCheck->bindParam(':ci', $ci, PDO::PARAM_INT);
+        $stmtCheck->bindParam(':casa_id', $casa_id, PDO::PARAM_INT);
+        $stmtCheck->bindParam(':semana', $lunesSemana);
+        $stmtCheck->execute();
+        $existe = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+        if ($existe) {
+            // Sumar horas a las existentes
+            $totalHoras = $existe['horas'] + $horas;
+            $stmtUpdate = $conn->prepare("UPDATE HorasTrabajo SET horas = :totalHoras WHERE CI = :ci AND casa_id = :casa_id AND semana = :semana");
+            $stmtUpdate->bindParam(':totalHoras', $totalHoras, PDO::PARAM_INT);
+            $stmtUpdate->bindParam(':ci', $ci, PDO::PARAM_INT);
+            $stmtUpdate->bindParam(':casa_id', $casa_id, PDO::PARAM_INT);
+            $stmtUpdate->bindParam(':semana', $lunesSemana);
+            $stmtUpdate->execute();
+        } else {
+            // Insertar nuevo registro de esta semana
+            $stmtInsert = $conn->prepare("INSERT INTO HorasTrabajo (CI, casa_id, semana, horas) VALUES (:ci, :casa_id, :semana, :horas)");
+            $stmtInsert->bindParam(':ci', $ci, PDO::PARAM_INT);
+            $stmtInsert->bindParam(':casa_id', $casa_id, PDO::PARAM_INT);
+            $stmtInsert->bindParam(':semana', $lunesSemana);
+            $stmtInsert->bindParam(':horas', $horas, PDO::PARAM_INT);
+            $stmtInsert->execute();
+        }
+    }
+
+    // Refrescar la página
+    header("Location: usuario.php?ci=" . urlencode($ci));
+    exit();
+}
+
+
 // Obtener datos del usuario
-$sql = "SELECT p.*, u.activo 
+$sql = "SELECT p.*, u.activo, c.nombre AS nombre_casa
         FROM Persona p
         JOIN Usuario u ON p.CI = u.CI
+        LEFT JOIN Trabajo t ON p.CI = t.CI
+        LEFT JOIN casas c ON t.casa_id = c.id
+        WHERE p.CI = :ci";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':ci', $ci, PDO::PARAM_INT);
+$stmt->execute();
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Obtener datos del usuario y la casa en la que trabaja (si existe)
+$sql = "SELECT p.*, u.activo, c.nombre AS nombre_casa
+        FROM Persona p
+        JOIN Usuario u ON p.CI = u.CI
+        LEFT JOIN Trabajo t ON p.CI = t.CI
+        LEFT JOIN casas c ON t.casa_id = c.id
         WHERE p.CI = :ci";
 
 $stmt = $conn->prepare($sql);
@@ -92,6 +155,46 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES['comprobantes'])) {
   <a href="landingpage.html" class="btn-logout">Cerrar sesión</a>
   <div class="logusuario">
     <h1>Bienvenido, <?= htmlspecialchars($usuario['Nombres']) ?></h1>
+    <?php
+// Suponiendo que $usuario y $ci ya están definidos como antes
+$trabajoActual = $usuario['nombre_casa'] ?? null;
+
+// Calcular la fecha del lunes de la semana actual
+$lunesSemana = date('Y-m-d', strtotime('monday this week'));
+?>
+<?php if ($trabajoActual): ?>
+  <p>Actualmente estás trabajando para: <strong><?= htmlspecialchars($trabajoActual) ?></strong></p>
+
+  <form method="POST" action="usuario.php?ci=<?= urlencode($ci) ?>">
+    <label for="horas_semanales">Horas trabajadas esta semana:</label>
+    <select name="horas_semanales" id="horas_semanales" required>
+      <?php for ($i = 1; $i <= 50; $i++): ?>
+        <option value="<?= $i ?>"><?= $i ?></option>
+      <?php endfor; ?>
+    </select>
+    <button type="submit" name="guardar_horas">Enviar</button>
+  </form>
+
+  <?php
+  // Mostrar horas totales de todas las semanas
+  $stmtHoras = $conn->prepare("SELECT SUM(horas) as total_horas, MAX(semana) as ultima_semana 
+                               FROM HorasTrabajo 
+                               WHERE CI = :ci AND casa_id = :casa_id");
+  $stmtHoras->bindParam(':ci', $usuario['CI'], PDO::PARAM_INT);
+  $stmtHoras->bindParam(':casa_id', $usuario['casa_id'], PDO::PARAM_INT);
+  $stmtHoras->execute();
+  $resHoras = $stmtHoras->fetch(PDO::FETCH_ASSOC);
+  $totalHoras = $resHoras['total_horas'] ?? 0;
+  $ultimaSemana = $resHoras['ultima_semana'] ?? null;
+
+  $emojiHoras = '';
+  if ($ultimaSemana && $totalHoras < 21) $emojiHoras = '🔴';
+  ?>
+  <p>Horas totales: <?= $totalHoras ?> <?= $emojiHoras ?></p>
+
+<?php else: ?>
+  <p>No has seleccionado ninguna casa aún.</p>
+<?php endif; ?>
     <form method="POST" class="registro-form">
       <div class="campo"><label for="nombres">Nombre</label><input type="text" name="nombres" id="nombres" value="<?= $usuario['Nombres'] ?>" required /></div>
       <div class="campo"><label for="apellidos">Apellido</label><input type="text" name="apellidos" id="apellidos" value="<?= $usuario['Apellidos'] ?>" required /></div>

@@ -88,3 +88,21 @@ CREATE TABLE casas (
     precio DECIMAL(10,2),
     imagen VARCHAR(255)
 );
+CREATE TABLE Trabajo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    CI INT NOT NULL,
+    casa_id INT NOT NULL,
+    horas INT DEFAULT 0,
+    FOREIGN KEY (CI) REFERENCES Persona(CI),
+    FOREIGN KEY (casa_id) REFERENCES casas(id)
+);
+CREATE TABLE HorasTrabajo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    CI INT NOT NULL,
+    casa_id INT NOT NULL,
+    semana DATE NOT NULL,
+    horas INT NOT NULL,
+    FOREIGN KEY (CI) REFERENCES Usuario(CI),
+    FOREIGN KEY (casa_id) REFERENCES casas(id)
+);
+
