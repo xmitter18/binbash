@@ -45,19 +45,21 @@ $resultado = $conexion->query($sql);
 <?php if ($resultado && $resultado->num_rows > 0): ?>
     <table id="tablaUsuarios">
         <thead>
-            <tr>
-                <th>CI</th>
-                <th>Nombre</th>
-                <th>Usuario</th>
-                <th>Correo</th>
-                <th>Teléfono</th>
-                <th>Domicilio</th>
-                <th>Estado</th>
-                <th>Comprobantes</th>
-                <th>Horas Trabajadas</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
+    <tr>
+        <th>CI</th>
+        <th>Nombre</th>
+        <th>Usuario</th>
+        <th>Correo</th>
+        <th>Teléfono</th>
+        <th>Domicilio</th>
+        <th>Estado</th>
+        <th>Comprobantes</th>
+        <th>Casa actual</th>
+        <th>Horas en casa actual</th>
+        <th>Horas totales</th>
+        <th>Acciones</th>
+    </tr>
+</thead>
         <tbody>
         <?php while ($fila = $resultado->fetch_assoc()): ?>
             <tr>
@@ -124,44 +126,123 @@ $resultado = $conexion->query($sql);
                     </ul>
                 </td>
 
-                <!-- Horas trabajadas -->
-                <td>
-                    <?php
-                        $stmtHoras = $conexion->prepare(
-                            "SELECT SUM(horas) as total_horas, MAX(semana) as ultima_semana
-                             FROM HorasTrabajo
-                             WHERE CI = ?"
-                        );
-                        $stmtHoras->bind_param("i", $ci);
-                        $stmtHoras->execute();
+<!-- Casa actual -->
+<td>
+    <?php
+        $stmtCasa = $conexion->prepare("
+            SELECT c.nombre, t.casa_id 
+            FROM Trabajo t
+            JOIN casas c ON t.casa_id = c.id
+            WHERE t.CI = ?
+        ");
+        $stmtCasa->bind_param("i", $ci);
+        $stmtCasa->execute();
+        $resCasa = $stmtCasa->get_result()->fetch_assoc();
 
-                        $resHoras = $stmtHoras->get_result()->fetch_assoc();
-                        $totalHoras = $resHoras['total_horas'] ?? 0;
-                        $ultimaSemana = $resHoras['ultima_semana'] ?? null;
+        $nombreCasa = $resCasa['nombre'] ?? 'Ninguna';
+        $casaId = $resCasa['casa_id'] ?? null;
 
-                        // --- Verificar mínimo 21 horas por semana ---
-                        $emojiHoras = '';
-                        if ($ultimaSemana && $totalHoras < 21) {
-                            $emojiHoras = '🔴';
-                        }
+        echo htmlspecialchars($nombreCasa);
+    ?>
+</td>
 
-                        echo $totalHoras . " " . $emojiHoras;
-                    ?>
-                </td>
+
+                <!-- Horas trabajadas en casa actual -->
+<td>
+    <?php
+        $horasCasa = 0;
+        if ($casaId) {
+            $stmtHorasCasa = $conexion->prepare("
+                SELECT SUM(horas) as total
+                FROM HorasTrabajo
+                WHERE CI = ? AND casa_id = ?
+            ");
+            $stmtHorasCasa->bind_param("ii", $ci, $casaId);
+            $stmtHorasCasa->execute();
+            $resHorasCasa = $stmtHorasCasa->get_result()->fetch_assoc();
+            $horasCasa = $resHorasCasa['total'] ?? 0;
+        }
+
+        echo $horasCasa;
+    ?>
+</td>
+
+<!-- Horas trabajadas totales -->
+<td>
+    <?php
+        $stmtHorasTotales = $conexion->prepare("
+            SELECT SUM(horas) as total
+            FROM HorasTrabajo
+            WHERE CI = ?
+        ");
+        $stmtHorasTotales->bind_param("i", $ci);
+        $stmtHorasTotales->execute();
+        $resHorasTotales = $stmtHorasTotales->get_result()->fetch_assoc();
+        $horasTotales = $resHorasTotales['total'] ?? 0;
+
+        echo $horasTotales;
+    ?>
+</td>
+
 
                 <!-- Acciones -->
-                <td>
-                    <form method="POST" class="acciones">
-                        <input type="hidden" name="ci" value="<?= $fila['CI'] ?>">
-                        <button type="submit" name="accion" value="aceptado" class="btn aceptar">Aceptar</button>
-                        <button type="submit" name="accion" value="rechazado" class="btn rechazar">Rechazar</button>
-                    </form>
-                </td>
+               <td>
+    <form method="POST" class="acciones" style="display:inline-block;">
+        <input type="hidden" name="ci" value="<?= $fila['CI'] ?>">
+        <button type="submit" name="accion" value="aceptado" class="btn aceptar">Aceptar</button>
+        <button type="submit" name="accion" value="rechazado" class="btn rechazar">Rechazar</button>
+    </form>
+    <form method="GET" action="editar_usuario.php" style="display:inline-block;">
+        <input type="hidden" name="ci" value="<?= $fila['CI'] ?>">
+        <button type="submit" class="btn editar">Editar</button>
+    </form>
+</td>
 
             </tr>
         <?php endwhile; ?>
         </tbody>
     </table>
+    <a href="/casas.php?ci=<?= urlencode($ci) ?>&origen=backofice" class="btn-ver-propiedades">Ver propiedades disponibles</a>
+
+<h2>Casas Registradas</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Imagen</th>
+            <th>Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $stmtCasas = $conexion->query("SELECT id, nombre, precio, imagen FROM casas ORDER BY id ASC");
+        while ($casa = $stmtCasas->fetch_assoc()):
+        ?>
+        <tr>
+            <td><?= $casa['id'] ?></td>
+            <td><?= htmlspecialchars($casa['nombre']) ?></td>
+            <td>USD <?= number_format($casa['precio'], 2) ?></td>
+            <td>
+                <img src="/<?= htmlspecialchars($casa['imagen']) ?>" alt="casa" width="120">
+            </td>
+            <td>
+                <form method="POST" action="eliminar_casa.php" onsubmit="return confirm('¿Seguro que quieres eliminar esta casa?');">
+                    <input type="hidden" name="id" value="<?= $casa['id'] ?>">
+                    <button type="submit" class="btn rechazar">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        <?php endwhile; ?>
+    </tbody>
+</table>
+    <br><br>
+
+    <a href="agregar_casa.php" class="btn-ver-propiedades">Agregar nueva casa</a>
+
+    <br><br>
+
 <?php else: ?>
     <p class="sin-usuarios">No hay usuarios registrados o hubo un error en la consulta.</p>
 <?php endif; ?>

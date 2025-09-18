@@ -483,13 +483,20 @@ ul li {
 }
 
 .btn.aceptar {
-  background-color: #4CAF50;
+  background-color: green;
   color: white;
 }
 
 .btn.rechazar {
-  background-color: #e53935;
+  background-color: red;
   color: white;
+}
+
+.btn.editar {
+  background-color: yellow;
+  color: white;
+  background-color: yellow; 
+  color: black;
 }
 
 .sin-usuarios {

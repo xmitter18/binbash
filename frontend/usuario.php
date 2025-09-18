@@ -242,7 +242,7 @@ $lunesSemana = date('Y-m-d', strtotime('monday this week'));
 
   <div class="contenedor-boton">
   <?php if ($usuario['activo'] === 'aceptado'): ?>
-  <a href="casas.php?ci=<?= urlencode($ci) ?>" class="btn-ver-propiedades">Ver propiedades disponibles</a>
+  <a href="casas.php?ci=<?= urlencode($ci) ?>&origen=usuario" class="btn-ver-propiedades">Ver propiedades disponibles</a>
   <?php else: ?>
     <button type="button" class="btn-ver-propiedades" disabled style="background-color: grey; cursor: not-allowed;">Esperando aprobación</button>
   <?php endif; ?>
