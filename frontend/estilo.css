@@ -517,6 +517,16 @@ ul li {
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
+.btn.eliminar {
+  background-color: #800020; /* Bordó */
+  color: white;
+}
+
+.btn.chat {
+  background-color: blue; /* Bordó */
+  color: white;
+}
+
 /*CASAS*/
 
 .encabezado-casas {

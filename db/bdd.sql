@@ -105,4 +105,13 @@ CREATE TABLE HorasTrabajo (
     FOREIGN KEY (CI) REFERENCES Usuario(CI),
     FOREIGN KEY (casa_id) REFERENCES casas(id)
 );
+CREATE TABLE Chat (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    remitente ENUM('admin','usuario') NOT NULL,
+    ci INT NOT NULL,
+    mensaje TEXT NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (ci) REFERENCES Usuario(CI) ON DELETE CASCADE
+);
+
 

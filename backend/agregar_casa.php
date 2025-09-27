@@ -6,36 +6,46 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $precio = $_POST['precio'];
     $imagen = null;
 
-    // Subida de imagen
-    $ext = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
-if (in_array($ext, ['jpg','jpeg','png'])) {
-    $nombreArchivo = uniqid("casa_", true) . "." . $ext;
+    // --- Validar que no exista otra casa con el mismo nombre ---
+    $stmtCheck = $conn->prepare("SELECT COUNT(*) as total FROM casas WHERE nombre = :nombre");
+    $stmtCheck->execute([':nombre' => $nombre]);
+    $existe = $stmtCheck->fetchColumn();
 
-    // Ruta dentro del contenedor (carpeta img del frontend)
-    $destino = __DIR__ . "/../img/" . $nombreArchivo;
+    if ($existe > 0) {
+        // Mostrar mensaje y no insertar
+        echo "<p style='color:red; text-align:center; font-weight:bold;'>
+                ⚠️ Ya existe una casa con el nombre '$nombre'. Elige otro.
+              </p>";
+    } else {
+        // Subida de imagen
+        $ext = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
+        if (in_array($ext, ['jpg','jpeg','png'])) {
+            $nombreArchivo = uniqid("casa_", true) . "." . $ext;
+            $destino = __DIR__ . "/../img/" . $nombreArchivo;
 
-    // Crear carpeta si no existe
-    if (!is_dir(dirname($destino))) {
-        mkdir(dirname($destino), 0777, true);
+            // Crear carpeta si no existe
+            if (!is_dir(dirname($destino))) {
+                mkdir(dirname($destino), 0777, true);
+            }
+
+            move_uploaded_file($_FILES['imagen']['tmp_name'], $destino);
+
+            // Guardamos la ruta relativa que verá el navegador
+            $imagen = "img/" . $nombreArchivo;
+        }
+
+        // Insertar en la base
+        $sql = "INSERT INTO casas (nombre, precio, imagen) VALUES (:nombre, :precio, :imagen)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            ':nombre' => $nombre,
+            ':precio' => $precio,
+            ':imagen' => $imagen
+        ]);
+
+        header("Location: backofice.php");
+        exit();
     }
-
-    move_uploaded_file($_FILES['imagen']['tmp_name'], $destino);
-
-    // Guardamos la ruta relativa que verá el navegador
-    $imagen = "img/" . $nombreArchivo;
-}
-
-
-    $sql = "INSERT INTO casas (nombre, precio, imagen) VALUES (:nombre, :precio, :imagen)";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([
-        ':nombre' => $nombre,
-        ':precio' => $precio,
-        ':imagen' => $imagen
-    ]);
-
-    header("Location: backofice.php");
-    exit();
 }
 ?>
 

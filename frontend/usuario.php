@@ -129,11 +129,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES['comprobantes'])) {
         if ($archivos['error'][$i] === UPLOAD_ERR_OK && $subidos < 2) {
             $ext = strtolower(pathinfo($archivos['name'][$i], PATHINFO_EXTENSION));
             if ($ext === 'pdf') {
-                $nuevoNombre = uniqid("comp_", true) . ".pdf";
-                $rutaDestino = $comprobantesDir . $nuevoNombre;
-                move_uploaded_file($archivos['tmp_name'][$i], $rutaDestino);
-                $subidos++;
-            }
+    $nombreOriginal = basename($archivos['name'][$i]); // nombre real
+    $rutaDestino = $comprobantesDir . $nombreOriginal;
+
+    move_uploaded_file($archivos['tmp_name'][$i], $rutaDestino);
+    $subidos++;
+}
+
         }
     }
 
@@ -165,32 +167,53 @@ $lunesSemana = date('Y-m-d', strtotime('monday this week'));
 <?php if ($trabajoActual): ?>
   <p>Actualmente estás trabajando para: <strong><?= htmlspecialchars($trabajoActual) ?></strong></p>
 
-  <form method="POST" action="usuario.php?ci=<?= urlencode($ci) ?>">
-    <label for="horas_semanales">Horas trabajadas esta semana:</label>
-    <select name="horas_semanales" id="horas_semanales" required>
-      <?php for ($i = 1; $i <= 50; $i++): ?>
-        <option value="<?= $i ?>"><?= $i ?></option>
-      <?php endfor; ?>
-    </select>
-    <button type="submit" name="guardar_horas">Enviar</button>
-  </form>
+ <?php
+// --- Calcular horas totales trabajadas ---
+$stmtHorasTotales = $conn->prepare("SELECT SUM(horas) as total FROM HorasTrabajo WHERE CI = :ci");
+$stmtHorasTotales->bindParam(':ci', $ci, PDO::PARAM_INT);
+$stmtHorasTotales->execute();
+$resHorasTotales = $stmtHorasTotales->fetch(PDO::FETCH_ASSOC);
+$horasTotales = $resHorasTotales['total'] ?? 0;
 
-  <?php
-  // Mostrar horas totales de todas las semanas
-  $stmtHoras = $conn->prepare("SELECT SUM(horas) as total_horas, MAX(semana) as ultima_semana 
-                               FROM HorasTrabajo 
-                               WHERE CI = :ci AND casa_id = :casa_id");
-  $stmtHoras->bindParam(':ci', $usuario['CI'], PDO::PARAM_INT);
-  $stmtHoras->bindParam(':casa_id', $usuario['casa_id'], PDO::PARAM_INT);
-  $stmtHoras->execute();
-  $resHoras = $stmtHoras->fetch(PDO::FETCH_ASSOC);
-  $totalHoras = $resHoras['total_horas'] ?? 0;
-  $ultimaSemana = $resHoras['ultima_semana'] ?? null;
+// --- Último registro de horas (para bloqueo 7 días) ---
+$stmtUltimo = $conn->prepare("SELECT MAX(semana) as ultima_semana FROM HorasTrabajo WHERE CI = :ci");
+$stmtUltimo->bindParam(':ci', $ci, PDO::PARAM_INT);
+$stmtUltimo->execute();
+$ultimaSemana = $stmtUltimo->fetch(PDO::FETCH_ASSOC)['ultima_semana'] ?? null;
 
-  $emojiHoras = '';
-  if ($ultimaSemana && $totalHoras < 21) $emojiHoras = '🔴';
-  ?>
-  <p>Horas totales: <?= $totalHoras ?> <?= $emojiHoras ?></p>
+// Bloqueo: si ya registró horas hace menos de 7 días
+$bloqueado = false;
+if ($ultimaSemana) {
+    $fechaUltima = new DateTime($ultimaSemana);
+    $hoy = new DateTime();
+    $diasPasados = $fechaUltima->diff($hoy)->days;
+    if ($diasPasados < 7) {
+        $bloqueado = true;
+    }
+}
+?>
+
+<!-- Formulario de carga de horas -->
+<form method="POST" action="usuario.php?ci=<?= urlencode($ci) ?>" 
+      onsubmit="return confirm('¿Estás seguro de que deseas registrar estas horas?');">
+  <label for="horas_semanales">Registrar horas trabajadas:</label>
+  <select name="horas_semanales" id="horas_semanales" required <?= $bloqueado ? 'disabled' : '' ?>>
+    <?php for ($i = 1; $i <= 50; $i++): ?>
+      <option value="<?= $i ?>"><?= $i ?></option>
+    <?php endfor; ?>
+  </select>
+  <button type="submit" name="guardar_horas" <?= $bloqueado ? 'disabled style="background-color: grey; cursor: not-allowed;"' : '' ?>>
+    Enviar
+  </button>
+</form>
+
+<!-- Mostrar total acumulado -->
+<p>Horas totales trabajadas: <?= $horasTotales ?></p>
+
+<?php if ($bloqueado): ?>
+  <p style="color: red;">⏳ Ya registraste horas recientemente. Podrás volver a hacerlo en 7 días.</p>
+<?php endif; ?>
+
 
 <?php else: ?>
   <p>No has seleccionado ninguna casa aún.</p>
@@ -240,13 +263,16 @@ $lunesSemana = date('Y-m-d', strtotime('monday this week'));
   </form>
 </div>
 
-  <div class="contenedor-boton">
+ <div class="contenedor-boton">
   <?php if ($usuario['activo'] === 'aceptado'): ?>
-  <a href="casas.php?ci=<?= urlencode($ci) ?>&origen=usuario" class="btn-ver-propiedades">Ver propiedades disponibles</a>
+    <a href="casas.php?ci=<?= urlencode($ci) ?>&origen=usuario" class="btn-ver-propiedades">Ver propiedades disponibles</a>
+    <a href="chat.php?ci=<?= urlencode($ci) ?>" class="btn-ver-propiedades">Chat con Admin</a>
   <?php else: ?>
     <button type="button" class="btn-ver-propiedades" disabled style="background-color: grey; cursor: not-allowed;">Esperando aprobación</button>
   <?php endif; ?>
 </div>
+
+
 
 
 </body>

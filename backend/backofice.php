@@ -9,8 +9,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['accion'], $_POST['ci'
 
     if (in_array($accion, ['aceptado', 'rechazado'])) {
         $conexion->query("UPDATE Usuario SET activo = '$accion' WHERE CI = $ci");
+    } elseif ($accion === 'eliminar') {
+        $conexion->query("DELETE FROM Usuario WHERE CI = $ci");
+        $conexion->query("DELETE FROM Persona WHERE CI = $ci");
     }
 }
+
 
 // --- Obtener usuarios ---
 $sql = "SELECT p.CI, p.Nombres, p.Apellidos, p.Domicilio, p.Telefono, p.Correo, 
@@ -147,25 +151,32 @@ $resultado = $conexion->query($sql);
 </td>
 
 
-                <!-- Horas trabajadas en casa actual -->
+              <!-- Horas trabajadas en casa actual (solo semana actual) -->
 <td>
     <?php
-        $horasCasa = 0;
+        $horasSemana = 0;
         if ($casaId) {
-            $stmtHorasCasa = $conexion->prepare("
-                SELECT SUM(horas) as total
-                FROM HorasTrabajo
-                WHERE CI = ? AND casa_id = ?
+            // lunes de esta semana
+            $lunesSemana = date('Y-m-d', strtotime('monday this week'));
+
+            $stmtHorasSemana = $conexion->prepare("
+                SELECT horas 
+                FROM HorasTrabajo 
+                WHERE CI = ? AND casa_id = ? AND semana = ?
             ");
-            $stmtHorasCasa->bind_param("ii", $ci, $casaId);
-            $stmtHorasCasa->execute();
-            $resHorasCasa = $stmtHorasCasa->get_result()->fetch_assoc();
-            $horasCasa = $resHorasCasa['total'] ?? 0;
+            $stmtHorasSemana->bind_param("iis", $ci, $casaId, $lunesSemana);
+            $stmtHorasSemana->execute();
+            $resHorasSemana = $stmtHorasSemana->get_result()->fetch_assoc();
+            $horasSemana = $resHorasSemana['horas'] ?? 0;
         }
 
-        echo $horasCasa;
+        // Emoji rojo si trabajó menos de 21 horas
+        $emoji = ($horasSemana < 21) ? '🔴' : '';
+
+        echo $horasSemana . " " . $emoji;
     ?>
 </td>
+
 
 <!-- Horas trabajadas totales -->
 <td>
@@ -185,6 +196,7 @@ $resultado = $conexion->query($sql);
 </td>
 
 
+
                 <!-- Acciones -->
                <td>
     <form method="POST" class="acciones" style="display:inline-block;">
@@ -196,12 +208,26 @@ $resultado = $conexion->query($sql);
         <input type="hidden" name="ci" value="<?= $fila['CI'] ?>">
         <button type="submit" class="btn editar">Editar</button>
     </form>
+    <form method="POST" class="acciones" style="display:inline-block;" onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?');">
+    <input type="hidden" name="accion" value="eliminar">
+    <input type="hidden" name="ci" value="<?= $fila['CI'] ?>">
+    <button type="submit" class="btn eliminar">Eliminar</button>
+</form>
+<form method="GET" action="chat_admin.php" style="display:inline-block;">
+    <input type="hidden" name="ci" value="<?= $fila['CI'] ?>">
+    <button type="submit" class="btn chat" >Chat</button>
+</form>
+
 </td>
 
             </tr>
         <?php endwhile; ?>
         </tbody>
     </table>
+    <a href="agregar_usuario.php" class="btn-ver-propiedades">Agregar usuario</a>
+
+<br><br>
+
     <a href="/casas.php?ci=<?= urlencode($ci) ?>&origen=backofice" class="btn-ver-propiedades">Ver propiedades disponibles</a>
 
 <h2>Casas Registradas</h2>
