@@ -6,3 +6,8 @@ docker exec -it mysql-docker mysql -u root -p
 USE cooperativa;
 DELETE cooperativa;
 
+testear:
+
+docker exec -it apache-php bash
+./vendor/bin/phpunit --colors=always --testdox backend/tests
+

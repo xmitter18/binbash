@@ -639,3 +639,96 @@ ul li {
 .btn-atras:hover {
   background-color: #357ABD;
 }
+
+/* =========================CHAT========================= */
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 90vh;
+  background: url('img/fondo2.jpg') no-repeat center center fixed;
+  background-size: cover;
+  padding: 20px;
+}
+
+.chat-box {
+  width: 100%;
+  max-width: 600px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+/* Burbuja de mensajes */
+.chat-box p {
+  background: #f1f1f1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin: 8px 0;
+  font-size: 15px;
+  max-width: 80%;
+  word-wrap: break-word;
+  line-height: 1.4;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Diferenciar admin y usuario */
+.chat-box p strong {
+  color: #4a90e2;
+}
+
+.chat-box p small {
+  display: block;
+  font-size: 11px;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* Formulario de entrada */
+.chat-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.chat-form input[type="text"] {
+  flex: 1;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.chat-form input[type="text"]:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 6px rgba(74,144,226,0.3);
+}
+
+/* Botón enviar igual que los otros */
+.chat-form button {
+  padding: 12px 24px;
+  background: #4a90e2;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.chat-form button:hover {
+  background: #357ABD;
+}
+

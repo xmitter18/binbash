@@ -59,7 +59,7 @@ $resultado = $conexion->query($sql);
         <th>Estado</th>
         <th>Comprobantes</th>
         <th>Casa actual</th>
-        <th>Horas en casa actual</th>
+        <th>Horas (S) en casa actual</th>
         <th>Horas totales</th>
         <th>Acciones</th>
     </tr>

@@ -1,7 +1,6 @@
 <?php
 require __DIR__ . '/conexion.php';
 
-
 $ci = $_GET['ci'] ?? null;
 if (!$ci) {
     die("CI no proporcionado");
@@ -14,6 +13,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && !empty($_POST['mensaje'])) {
     $stmt->bindParam(':ci', $ci, PDO::PARAM_INT);
     $stmt->bindParam(':mensaje', $mensaje);
     $stmt->execute();
+
+    // 👉 Redirigir de vuelta a chat_admin.php
     header("Location: chat_admin.php?ci=" . urlencode($ci));
     exit();
 }
@@ -29,22 +30,30 @@ $mensajes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
   <meta charset="UTF-8">
   <title>Chat con Usuario <?= htmlspecialchars($ci) ?></title>
-  <link rel="stylesheet" href="estilo.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="/estilo.css?v=<?= time() ?>">
 </head>
 <body>
-  <h1>Chat con Usuario <?= htmlspecialchars($ci) ?></h1>
-  <div class="chat-box" style="border:1px solid #ccc; padding:10px; max-width:600px; height:300px; overflow-y:auto;">
-    <?php foreach ($mensajes as $msg): ?>
-      <p><strong><?= htmlspecialchars($msg['remitente']) ?>:</strong> <?= htmlspecialchars($msg['mensaje']) ?> <small>(<?= $msg['fecha'] ?>)</small></p>
-    <?php endforeach; ?>
+  <div class="chat-container">
+    <h1>Chat con Usuario <?= htmlspecialchars($ci) ?></h1>
+    <div class="chat-box">
+  <?php foreach ($mensajes as $msg): ?>
+    <div class="mensaje <?= $msg['remitente'] === 'admin' ? 'admin' : 'usuario' ?>">
+      <p>
+        <strong><?= htmlspecialchars($msg['remitente']) ?>:</strong>
+        <?= htmlspecialchars($msg['mensaje']) ?>
+      </p>
+      <small>(<?= $msg['fecha'] ?>)</small>
+    </div>
+  <?php endforeach; ?>
+</div>
+
+    <form method="POST" class="chat-form">
+      <input type="text" name="mensaje" placeholder="Escribe tu respuesta..." required>
+      <button type="submit">Enviar</button>
+    </form>
+
+    <br>
+    <a href="backofice.php" class="btn-link">⬅ Volver al panel</a>
   </div>
-
-  <form method="POST" style="margin-top:10px;">
-    <input type="text" name="mensaje" placeholder="Escribe tu respuesta..." required style="width:70%">
-    <button type="submit">Enviar</button>
-  </form>
-
-  <br>
-  <a href="backofice.php">⬅ Volver al panel</a>
 </body>
 </html>

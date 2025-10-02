@@ -32,19 +32,21 @@ $mensajes = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <link rel="stylesheet" href="estilo.css?v=<?= time() ?>">
 </head>
 <body>
+    <div class="chat-container">
   <h1>Chat con el Administrador</h1>
-  <div class="chat-box" style="border:1px solid #ccc; padding:10px; max-width:600px; height:300px; overflow-y:auto;">
+    <div class="chat-box">
     <?php foreach ($mensajes as $msg): ?>
       <p><strong><?= htmlspecialchars($msg['remitente']) ?>:</strong> <?= htmlspecialchars($msg['mensaje']) ?> <small>(<?= $msg['fecha'] ?>)</small></p>
     <?php endforeach; ?>
   </div>
 
-  <form method="POST" style="margin-top:10px;">
-    <input type="text" name="mensaje" placeholder="Escribe tu mensaje..." required style="width:70%">
-    <button type="submit">Enviar</button>
+    <form method="POST" class="chat-form">
+      <input type="text" name="mensaje" placeholder="Escribe tu mensaje..." required>
+      <button type="submit">Enviar</button>
   </form>
 
   <br>
-  <a href="usuario.php?ci=<?= urlencode($ci) ?>">⬅ Volver al perfil</a>
+    <a href="usuario.php?ci=<?= urlencode($ci) ?>" class="btn-link">⬅ Volver al perfil</a>
+      </div>
 </body>
 </html>
