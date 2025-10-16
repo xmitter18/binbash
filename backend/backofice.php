@@ -195,8 +195,6 @@ $resultado = $conexion->query($sql);
     ?>
 </td>
 
-
-
                 <!-- Acciones -->
                <td>
     <form method="POST" class="acciones" style="display:inline-block;">
